@@ -17,7 +17,7 @@ Accurate brain extraction is a critical step in the analysis of rodent head magn
 ## Installation 
 To set up SAMson, execute the following commands:  
 ```
-conda create -n samson Python=3.10       # Create a new Conda environment  
+conda create -n samson python=3.10       # Create a new Conda environment  
 conda activate samson                    # Activate the environment  
 pip install -r path/to/requirements.txt  # Install the required dependencies  
 jupyter-notebook                         # Launch Jupyter Notebook  
@@ -29,13 +29,13 @@ To start using SAMson, proceed with the following steps:
 2. Complete the installation steps outlined above. Additionally, download the following resources:
  - [SAM's ViT-H model checkpoint](https://github.com/facebookresearch/segment-anything?tab=readme-ov-file#model-checkpoints).
  - [Mouse-X template](https://doi.org/10.20350/digitalCSIC/17000).
-3. Open the Jupyter Notebook ([`SAMson.ipynb`](https://github.com/CanalsLab/SAMson/blob/main/SAMson.ipynb)) and follow the instructions provided within to initialize and use the tool.
+3. Open the Jupyter Notebook ([`SAMson.ipynb`](https://github.com/CanalsLab/SAMson/blob/main/SAMson.ipynb)) and follow the instructions to initialize and use the tool.
 
 ## Citation
 If you use SAMson in your research, please use the following BibTeX entry.
 ```
-@article {Soler2024.03.07.583982,
-	author = {Soler, Daniel Panadero and Selim, Mohamed Kotb and Mart{\'\i}nez-Tazo, Patricia and Mu{\~n}oz-Moreno, Emma and Ramos-Cabrer, Pedro and L{\'o}pez-Larrubia, Pilar and De Santis, Silvia and Canals, Santiago and Pertusa, Antonio},
+@article {Panadero Soler2024.03.07.583982,
+	author = {Panadero Soler, Daniel and Kotb Selim, Mohamed and Mart{\'\i}nez-Tazo, Patricia and Mu{\~n}oz-Moreno, Emma and Ramos-Cabrer, Pedro and L{\'o}pez-Larrubia, Pilar and De Santis, Silvia and Canals, Santiago and Pertusa, Antonio},
 	title = {SAMson: an automated brain extraction tool for rodents using SAM},
 	elocation-id = {2024.03.07.583982},
 	year = {2025},
