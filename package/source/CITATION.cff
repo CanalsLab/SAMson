@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use SAMson, please cite the article."
+title: "SAMson: brain extraction of rodent MRI with the Segment Anything Model"
+type: software
+version: 1.0.0
+date-released: 2026-11-09
+license: MIT
+repository-code: "https://github.com/CanalsLab/SAMson"
+authors:
+  - {family-names: "Panadero Soler", given-names: "Daniel"}
+  - {family-names: "Kotb Selim", given-names: "Mohamed"}
+  - {family-names: "Martínez-Tazo", given-names: "Patricia"}
+  - {family-names: "Muñoz-Moreno", given-names: "Emma"}
+  - {family-names: "Ramos-Cabrer", given-names: "Pedro"}
+  - {family-names: "López-Larrubia", given-names: "Pilar"}
+  - {family-names: "De Santis", given-names: "Silvia"}
+  - {family-names: "Canals", given-names: "Santiago"}
+  - {family-names: "Pertusa", given-names: "Antonio"}
+preferred-citation:
+  type: article
+  title: "SAMson: an automated brain extraction tool for rodents using SAM"
+  doi: "10.1101/2024.03.07.583982"
+  year: 2025
+  journal: "bioRxiv"
+  authors:
+    - {family-names: "Panadero Soler", given-names: "Daniel"}
+    - {family-names: "Kotb Selim", given-names: "Mohamed"}
+    - {family-names: "Martínez-Tazo", given-names: "Patricia"}
+    - {family-names: "Muñoz-Moreno", given-names: "Emma"}
+    - {family-names: "Ramos-Cabrer", given-names: "Pedro"}
+    - {family-names: "López-Larrubia", given-names: "Pilar"}
+    - {family-names: "De Santis", given-names: "Silvia"}
+    - {family-names: "Canals", given-names: "Santiago"}
+    - {family-names: "Pertusa", given-names: "Antonio"}

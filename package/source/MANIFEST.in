@@ -1,0 +1,6 @@
+include README.md CHANGELOG.md CITATION.cff LICENSE requirements-lock.txt environment.yml
+recursive-include docs *.md *.png
+recursive-include examples *.py *.sh *.json
+recursive-include tests *.py
+recursive-include validation *.py *.md *.csv
+recursive-include src/samson_mri/data *.nii.gz *.md

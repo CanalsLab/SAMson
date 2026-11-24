@@ -1,0 +1,12 @@
+{
+  "samson_spec_version": 1,
+  "name": "Article D3 (T2w *_flip.nii.gz images)",
+  "orientation": {
+    "axes": [0, 1, 2],
+    "flip": [false, false, false]
+  },
+  "slices": [0, -1],
+  "template": [3, 35],
+  "otsu": "auto",
+  "volume": 0
+}

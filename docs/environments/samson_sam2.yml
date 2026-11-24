@@ -1,0 +1,19 @@
+# Environment `samson_sam2`: SAM2 masks (notebooks/runners/sam2_run.py). Same versions as the environment of the
+# publication run (SAM 2 at commit 2b90b9f5; PyTorch 2.5.1 with CUDA 12.1).
+# conda env create -f samson_sam2.yml
+name: samson_sam2
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.7
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      - torch==2.5.1+cu121
+      - torchvision==0.20.1+cu121
+      - numpy==1.26.3
+      - scipy==1.12.0
+      - nibabel==5.2.1
+      - scikit-image==0.22.0
+      - opencv-python==4.10.0.84
+      - git+https://github.com/facebookresearch/sam2.git@2b90b9f5ceec907a1c18123530e92e794ad901a4

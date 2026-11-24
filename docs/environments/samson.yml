@@ -1,0 +1,27 @@
+# Environment `samson`: SAMson, SAMson Oracle and MedSAM masks, the library of notebooks/ (run_all.py) and the four
+# notebooks. Versions of the environment that produced and evaluated the published masks (results/environment.json).
+# conda env create -f samson.yml
+name: samson
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.7
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      - torch==2.4.1+cu121
+      - torchvision==0.19.1+cu121
+      - segment-anything==1.0
+      - numpy==1.26.3
+      - scipy==1.12.0
+      - pandas==2.2.2
+      - statsmodels==0.14.4
+      - matplotlib==3.8.0
+      - seaborn==0.13.2
+      - nibabel==5.2.1
+      - dipy==1.9.0
+      - scikit-image==0.22.0
+      - opencv-python==4.10.0.84
+      - jupyterlab==4.0.8
+      - ipykernel==6.28.0
+      - nbconvert==7.10.0

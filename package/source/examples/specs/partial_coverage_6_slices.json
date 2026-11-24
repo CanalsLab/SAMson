@@ -1,0 +1,12 @@
+{
+  "samson_spec_version": 1,
+  "name": "6 coronal slices of 1 mm (midbrain to septum), Bruker headers RIA",
+  "orientation": {
+    "axes": [0, 1, 2],
+    "flip": [false, true, false]
+  },
+  "slices": [0, -1],
+  "template": [12, 22],
+  "otsu": "auto",
+  "volume": 0
+}

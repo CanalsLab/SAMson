@@ -1,0 +1,210 @@
+% tools.bib -- references of the brain-extraction tools and software used in the SAMson benchmark
+% (keys as in the article where the article cites them; fsl_bet4animal cites the FSL documentation and the script,
+% no peer-reviewed reference was found). Entries are reproduced without their abstracts.
+
+@inproceedings{kirillov,
+  title     = {Segment anything},
+  author    = {Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C and Lo, Wan-Yen and others},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages     = {4015--4026},
+  year      = {2023},
+  doi       = {10.1109/ICCV51070.2023.00371}
+}
+
+@article{ma,
+  author  = {Ma, Jun and He, Yuting and Li, Feifei and Han, Lin and You, Chenyu and Wang, Bo},
+  title   = {Segment anything in medical images},
+  journal = {Nature Communications},
+  year    = {2024},
+  volume  = {15},
+  number  = {1},
+  pages   = {654},
+  issn    = {2041-1723},
+  doi     = {10.1038/s41467-024-44824-z}
+}
+
+@misc{ravi,
+  author        = {Ravi, Nikhila and Gabeur, Valentin and Hu, Yuan-Ting and Hu, Ronghang and Ryali, Chaitanya and Ma, Tengyu and Khedr, Haitham and R{\"a}dle, Roman and Rolland, Chloe and Gustafson, Laura and Mintun, Eric and Pan, Junting and Alwala, Kalyan Vasudev and Carion, Nicolas and Wu, Chao-Yuan and Girshick, Ross and Doll{\'a}r, Piotr and Feichtenhofer, Christoph},
+  title         = {{SAM} 2: Segment Anything in Images and Videos},
+  year          = {2024},
+  eprint        = {2408.00714},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CV},
+  url           = {https://arxiv.org/abs/2408.00714},
+  doi           = {10.48550/arXiv.2408.00714}
+}
+
+@article{smith,
+  title   = {Fast robust automated brain extraction},
+  author  = {Smith, Stephen M},
+  journal = {Hum Brain Mapp},
+  volume  = {17},
+  number  = {3},
+  pages   = {143--155},
+  month   = nov,
+  year    = {2002},
+  doi     = {10.1002/hbm.10062}
+}
+
+@article{jenkinson,
+  author  = {Jenkinson, Mark and Beckmann, Christian F. and Behrens, Timothy E. J. and Woolrich, Mark W. and Smith, Stephen M.},
+  title   = {{FSL}},
+  journal = {NeuroImage},
+  volume  = {62},
+  number  = {2},
+  pages   = {782--790},
+  year    = {2012},
+  doi     = {10.1016/j.neuroimage.2011.09.015}
+}
+
+@misc{fsl_bet4animal,
+  author       = {Hayashi, Takuya and Smith, Stephen M.},
+  title        = {bet4animal: {BET} for animal brains (script distributed with {FSL} 6.0.6.6 and later)},
+  howpublished = {{FSL} documentation, \url{https://fsl.fmrib.ox.ac.uk/fsl/docs/structural/bet.html}},
+  note         = {Script version 1.1 (27 May 2024) used here. No peer-reviewed publication of bet4animal was found; the method is BET \citep{smith} applied after species-specific voxel rescaling},
+  year         = {2024}
+}
+
+@article{deepbet,
+  author  = {Fisch, Lukas and Zumdick, Stefan and Barkhau, Carlotta and Emden, Daniel and Ernsting, Jan and Leenings, Ramona and Sarink, Kelvin and Winter, Nils R. and Risse, Benjamin and Dannlowski, Udo and Hahn, Tim},
+  title   = {deepbet: Fast brain extraction of {T1}-weighted {MRI} using Convolutional Neural Networks},
+  journal = {Computers in Biology and Medicine},
+  volume  = {179},
+  pages   = {108845},
+  year    = {2024},
+  doi     = {10.1016/j.compbiomed.2024.108845}
+}
+
+@article{ben,
+  title   = {A generalizable brain extraction net ({BEN}) for multimodal {MRI} data from rodents, nonhuman primates, and humans},
+  author  = {Yu, Ziqi and Han, Xiaoyang and Xu, Wenjing and Zhang, Jie and Marr, Carsten and Shen, Dinggang and Peng, Tingying and Zhang, Xiao-Yong and Feng, Jianfeng},
+  journal = {eLife},
+  volume  = {11},
+  pages   = {e81217},
+  year    = {2022},
+  doi     = {10.7554/eLife.81217}
+}
+
+@article{rbm,
+  title   = {Automatic Skull Stripping of Rat and Mouse Brain {MRI} Data Using {U-Net}},
+  author  = {Hsu, Li-Ming and Wang, Shuai and Ranadive, Paridhi and Ban, Woomi and Chao, Tzu-Hao Harry and Song, Sheng and Cerri, Domenic Hayden and Walton, Lindsay R. and Broadwater, Margaret A. and Lee, Sung-Ho and Shen, Dinggang and Shih, Yen-Yu Ian},
+  journal = {Front Neurosci},
+  volume  = {14},
+  pages   = {568614},
+  month   = oct,
+  year    = {2020},
+  doi     = {10.3389/fnins.2020.568614}
+}
+
+@article{liu1,
+  title     = {Automatic brain extraction for rodent MRI images},
+  author    = {Liu, Yikang and Unsal, Hayreddin Said and Tao, Yi and Zhang, Nanyin},
+  journal   = {Neuroinformatics},
+  volume    = {18},
+  number    = {3},
+  pages     = {395--406},
+  year      = {2020},
+  doi       = {10.1007/s12021-020-09453-z},
+  publisher = {Springer}
+}
+
+@article{avants,
+  author  = {Avants, Brian B. and Tustison, Nicholas J. and Song, Gang and Cook, Philip A. and Klein, Arno and Gee, James C.},
+  title   = {A reproducible evaluation of {ANTs} similarity metric performance in brain image registration},
+  journal = {NeuroImage},
+  volume  = {54},
+  number  = {3},
+  pages   = {2033--2044},
+  year    = {2011},
+  doi     = {10.1016/j.neuroimage.2010.09.025}
+}
+
+@article{tustison,
+  author  = {Tustison, Nicholas J. and Cook, Philip A. and Klein, Arno and Song, Gang and Das, Sandhitsu R. and Duda, Jeffrey T. and Kandel, Benjamin M. and van Strien, Niels and Stone, James R. and Gee, James C. and Avants, Brian B.},
+  title   = {Large-scale evaluation of {ANTs} and {FreeSurfer} cortical thickness measurements},
+  journal = {NeuroImage},
+  volume  = {99},
+  pages   = {166--179},
+  year    = {2014},
+  doi     = {10.1016/j.neuroimage.2014.05.044}
+}
+
+@article{tustison_n4,
+  author  = {Tustison, Nicholas J. and Avants, Brian B. and Cook, Philip A. and Zheng, Yuanjie and Egan, Alexander and Yushkevich, Paul A. and Gee, James C.},
+  title   = {{N4ITK}: Improved {N3} Bias Correction},
+  journal = {IEEE Transactions on Medical Imaging},
+  volume  = {29},
+  number  = {6},
+  pages   = {1310--1320},
+  year    = {2010},
+  doi     = {10.1109/TMI.2010.2046908}
+}
+
+@article{avants_syn,
+  author  = {Avants, Brian B. and Epstein, Charles L. and Grossman, Murray and Gee, James C.},
+  title   = {Symmetric diffeomorphic image registration with cross-correlation: evaluating automated labeling of elderly and neurodegenerative brain},
+  journal = {Medical Image Analysis},
+  volume  = {12},
+  number  = {1},
+  pages   = {26--41},
+  year    = {2008},
+  doi     = {10.1016/j.media.2007.06.004}
+}
+
+@article{avants_atropos,
+  author  = {Avants, Brian B. and Tustison, Nicholas J. and Wu, Jue and Cook, Philip A. and Gee, James C.},
+  title   = {An open source multivariate framework for n-tissue segmentation with evaluation on public data},
+  journal = {Neuroinformatics},
+  volume  = {9},
+  number  = {4},
+  pages   = {381--400},
+  year    = {2011},
+  doi     = {10.1007/s12021-011-9109-y}
+}
+
+@article{garyfallidis,
+  title   = {Dipy, a library for the analysis of diffusion {MRI} data},
+  author  = {Garyfallidis, Eleftherios and Brett, Matthew and Amirbekian, Bagrat and Rokem, Ariel and van der Walt, Stefan and Descoteaux, Maxime and Nimmo-Smith, Ian and {Dipy Contributors}},
+  journal = {Front Neuroinform},
+  volume  = {8},
+  pages   = {8},
+  year    = {2014},
+  doi     = {10.3389/fninf.2014.00008}
+}
+
+@article{otsu,
+  title   = {A Threshold Selection Method from Gray-Level Histograms},
+  author  = {Otsu, Nobuyuki},
+  journal = {IEEE Transactions on Systems, Man, and Cybernetics},
+  volume  = {9},
+  number  = {1},
+  pages   = {62--66},
+  year    = {1979},
+  doi     = {10.1109/TSMC.1979.4310076}
+}
+
+@inproceedings{paszke_pytorch,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and K{\"o}pf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  title     = {{PyTorch}: An Imperative Style, High-Performance Deep Learning Library},
+  booktitle = {Advances in Neural Information Processing Systems 32},
+  pages     = {8024--8035},
+  year      = {2019}
+}
+
+@inproceedings{abadi_tensorflow,
+  author    = {Abadi, Mart{\'\i}n and Barham, Paul and Chen, Jianmin and Chen, Zhifeng and Davis, Andy and Dean, Jeffrey and Devin, Matthieu and Ghemawat, Sanjay and Irving, Geoffrey and Isard, Michael and Kudlur, Manjunath and Levenberg, Josh and Monga, Rajat and Moore, Sherry and Murray, Derek G. and Steiner, Benoit and Tucker, Paul and Vasudevan, Vijay and Warden, Pete and Wicke, Martin and Yu, Yuan and Zheng, Xiaoqiang},
+  title     = {{TensorFlow}: A System for Large-Scale Machine Learning},
+  booktitle = {12th USENIX Symposium on Operating Systems Design and Implementation (OSDI 16)},
+  pages     = {265--283},
+  year      = {2016}
+}
+
+@article{lowekamp_simpleitk,
+  author  = {Lowekamp, Bradley C. and Chen, David T. and Ib{\'a}{\~n}ez, Luis and Blezek, Daniel},
+  title   = {The Design of {SimpleITK}},
+  journal = {Frontiers in Neuroinformatics},
+  volume  = {7},
+  pages   = {45},
+  year    = {2013},
+  doi     = {10.3389/fninf.2013.00045}
+}

@@ -1,0 +1,22 @@
+# Conda environment with the versions with which samson-mri 1.0.0 was tested (see requirements-lock.txt for every package).
+# conda env create -f environment.yml && conda activate samson && pip install --no-deps .
+name: samson
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch==2.5.1
+      - torchvision==0.20.1
+      - segment-anything==1.0
+      - numpy==2.2.6
+      - scipy==1.14.1
+      - pandas==2.3.3
+      - nibabel==5.3.2
+      - dipy==1.10.0
+      - scikit-image==0.25.0
+      - opencv-python-headless==4.10.0.84
+      - matplotlib==3.10.0
+      - streamlit==1.65.0
+      - pytest

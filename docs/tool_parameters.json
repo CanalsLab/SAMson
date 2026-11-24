@@ -1,0 +1,309 @@
+{
+  "description": "Parameters of every tool for the published masks (outputs/masks). notebooks/lib/config.py reads this file; the software is located with environment variables (notebooks/REPRODUCIBILITY.md, 'External software'). Five (tool, dataset-contrast) pairs use dataset-specific settings (notebooks/lib/config.py, DATASET_SPECIFIC_SETTINGS). Description: docs/tools_and_conventions.md.",
+  "input_rule": {
+    "image": "the dataset image (datasets/<Dk>/<folder>/<stem>.nii.gz; voxel sizes x10 in pixdim and affine, sform = qform), re-oriented losslessly to the canonical orientation of dataset_settings.json (perm, flips) and saved as float32 NIfTI. The same file is given to every tool.",
+    "output_mask": "tool mask on the canonical grid -> binarised (> 0) -> inverse re-orientation to the raw grid -> uint8 {0,1} with the dataset image's x10 header -> outputs/masks/<tool>/<Dk>/<folder>/<stem>_mask.nii.gz",
+    "reference_for_semi_auto_and_oracle": "reference mask re-oriented with the same canonical transform",
+    "orientation": "canonical orientation for every tool; BEN and RBM receive it with axis 1 reversed (dorsal-up coronal slices) and their mask is reversed back (orientation_decision_ben_rbm)",
+    "header_labels": "headers as stored for every tool except deepbet, which receives anatomical labels (direction-cosine columns of axes 1 and 2 exchanged for D1, D2 and D5; voxel data unchanged)",
+    "voxel_sizes": "x10 for every tool; BET4Animal and RBM options are expressed in header units",
+    "d2_header": "D2: the tools receive a header voxel size of 0.1302 x 0.1302 x 0.8 mm (x10; notebooks/lib/config.py TOOL_INPUT_AFFINE_X10), with which the published D2 masks were computed; only BET, BET4Animal, RBM and ANTs use the voxel size"
+  },
+  "orientation_decision_ben_rbm": {
+    "decision": "option B: BEN and RBM receive the canonical x10 image with axis 1 reversed (dorsal-up coronal slices) and their mask is reversed back",
+    "rationale": "BEN documents RIA as its rodent orientation, which for the canonical images equals canonical with axis 1 reversed; dorsal-up is the conventional orientation of 2D slice networks (RBM documents none)."
+  },
+  "threads_and_devices": {
+    "cpu_tools": "one process per scan pinned to one logical CPU (taskset), OMP/OPENBLAS/MKL/ITK threads = 1; 80 workers in parallel on CPUs 16-95",
+    "gpu_tools": "one process for all scans of a tool, sequentially on the GPU (CUDA device 0), CPU affinity 16-95, 80 threads",
+    "subprocess_environment": "numpy's MKL_* variables are removed from the environment of the external tools (they make `import torch` fail in deepbet and SAM2)"
+  },
+  "tools": {
+    "samson_full_auto": {
+      "display_name": "SAMson Full-Auto",
+      "versions": {
+        "python": "3.11.7",
+        "torch": "2.4.1+cu121 (CUDA 12.1, cuDNN 9.1.0)",
+        "segment-anything": "1.0",
+        "dipy": "1.9.0",
+        "numpy": "1.26.3",
+        "scipy": "1.12.0",
+        "scikit-image": "0.22.0",
+        "opencv-python": "4.10.0.84",
+        "nibabel": "5.2.1"
+      },
+      "checkpoint": {
+        "path": "sam_vit_h_4b8939.pth",
+        "model": "vit_h",
+        "sha256": "a7bf3b02f3ebf1267aba913ff637d9a2d5c33d3173bb679e46d9f338c26f262e",
+        "md5": "4b8939a88964f0f4ff5f5b2642c598a6"
+      },
+      "call": "relative_coordinates = template_relative_coordinates(template x10); part = canonical[:, :, z0:z1+1] (image_slices of dataset_settings samson_ap); boxes = generate_boxes(part, median_radius, numpass, t0, t1); full, candidates = segment_volume(part, [(boxes, False), (boxes, True)])",
+      "parameters": {
+        "ap": "dataset_settings.json samson_ap (per slice count)",
+        "median_otsu": "dataset_settings.json median_otsu ((2,5) if canonical axis-1 size < 140 else (1,3))",
+        "template": "datasets/template/anat_template_FP.nii.gz",
+        "slices_outside_ap_range": "0 in the mask"
+      },
+      "input": "x10 canonical (array only; header not read)",
+      "header_dependent": false,
+      "orientation_dependent": "yes, by design (canonical required)",
+      "device": "cuda",
+      "threads": 80,
+      "padding": null,
+      "header_labels": "stored",
+      "environment": "samson"
+    },
+    "samson_semi_auto": {
+      "display_name": "SAMson Semi-Auto",
+      "same_as": "samson_full_auto",
+      "call": "best = find_best_mask_indexes(evaluate_slices(candidates, reference[:, :, z0:z1+1])); semi = candidates[arange, best] (per slice, the candidate with the highest Jaccard against the reference mask: oracle selection, a disclosed Methods choice)",
+      "header_labels": "stored"
+    },
+    "samson_oracle": {
+      "display_name": "SAMson Oracle",
+      "same_as": "samson_full_auto",
+      "call": "oracle_boxes = bounding_boxes(reference[:, :, z0:z1+1].astype(float)); segment_volume(part, [(oracle_boxes, False)])",
+      "header_labels": "stored"
+    },
+    "medsam_samson_boxes": {
+      "display_name": "MedSAM (SAMson boxes)",
+      "checkpoint": {
+        "path": "medsam_vit_b.pth",
+        "model": "vit_b",
+        "sha256": "34b34b78c1d18cb8c6bf84cf9c00e135d6d6c965699f3c0e31ef1bc9dcb5be74",
+        "md5": "3bb6db55bd0c9ca30b61248bca72f8d6"
+      },
+      "call": "SamPredictor(sam_model_registry['vit_b'](checkpoint)); segment_volume(part, [(full_auto_boxes, False)], model=medsam_predictor) (SAMson post-processing)",
+      "input": "x10 canonical (array only)",
+      "header_dependent": false,
+      "device": "cuda",
+      "threads": 80,
+      "header_labels": "stored",
+      "environment": "samson"
+    },
+    "sam2_samson_boxes": {
+      "display_name": "SAM2 (SAMson boxes)",
+      "versions": {
+        "python": "3.11.7",
+        "torch": "2.5.1+cu121 (CUDA 12.1, cuDNN 9.1.0)",
+        "sam2": "1.0, git commit 2b90b9f5ceec907a1c18123530e92e794ad901a4 (facebookresearch/sam2)"
+      },
+      "runner": {
+        "path": "notebooks/runners/sam2_run.py",
+        "usage": "python sam2_run.py jobs.json; jobs.json = {checkpoint, jobs: [{input, boxes (.npy Full-Auto boxes), z0, z1, output}]}"
+      },
+      "checkpoint": {
+        "path": "sam2.1_hiera_large.pt",
+        "config": "configs/sam2.1/sam2.1_hiera_l.yaml",
+        "sha256": "2647878d5dfa5098f2f8649825738a9345572bae2d4350a2468587ece47dd318",
+        "md5": "2b30654b6112c42a115563c638d238d9"
+      },
+      "input": "x10 canonical (array only); mask saved with the input header",
+      "header_dependent": false,
+      "device": "cuda",
+      "threads": 80,
+      "header_labels": "stored",
+      "environment": "samson_sam2"
+    },
+    "bet": {
+      "display_name": "BET",
+      "versions": {
+        "FSL packages": "fsl-bet2 2111.4, fsl-newimage 2203.11, fsl-avwutils 2209.2, fsl-base 2309.2 (FSL 6.0.7.4 release versions)",
+        "bet2_sha256": "09562e3467f6114bc444d7b9eb5872f5755d886d49b5937bcba7ae7d5ec42205"
+      },
+      "command": [
+        "bet",
+        "{input_x10}",
+        "{out_prefix}",
+        "-m",
+        "-r",
+        "40",
+        "-f",
+        "0.2",
+        "-g",
+        "0.07"
+      ],
+      "output_mask": "{out_prefix}_mask.nii.gz",
+      "parameters": {
+        "r_mm_header_units": 40,
+        "f": 0.2,
+        "g": 0.07,
+        "c": "default (centre of gravity)"
+      },
+      "input": "x10 canonical",
+      "header_dependent": true,
+      "orientation_dependent": true,
+      "threads": 1,
+      "device": "cpu",
+      "padding": null,
+      "header_labels": "stored",
+      "environment": "fsl_6.0.7.4"
+    },
+    "bet4animal": {
+      "display_name": "BET4Animal",
+      "versions": {
+        "FSL packages": "fsl-bet2 2111.8, fsl-newimage 2203.12, fsl-avwutils 2209.3, fsl-base 2502.1 (FSL 6.0.7.17 release versions)",
+        "bet4animal_script": "ver 1.1, 27 May 2024",
+        "bet4animal_sha256": "edf0b8dcbf0f64ba61f9bdf3d326b10901937978c21b8c71378358d611c61064",
+        "bet2_sha256": "a5b6806671beac6d722ec64d0bf994c355925427e3862d94c1a4accb1ebc60af"
+      },
+      "command": [
+        "bet4animal",
+        "{input_x10}",
+        "{out_prefix}.nii.gz",
+        "-m -x 1.6,1.2,2 -r 40 -f 0.4 -g 0"
+      ],
+      "output_mask": "{out_prefix}_mask.nii.gz",
+      "parameters": {
+        "x": "1.6,1.2,2 (custom scales)",
+        "r": 40,
+        "f": 0.4,
+        "g": 0,
+        "c": "default"
+      },
+      "derivation": "-z 6 (mouse) multiplies the real voxel sizes by 16, 12, 20 and the radius by 16 (4 -> 64 mm). On the x10 input, the scales 1.6, 1.2, 2.0 give the same scaled voxel sizes and -r 40 the same scaled radius (40 x 1.6 = 64 mm).",
+      "input": "x10 canonical",
+      "header_dependent": true,
+      "orientation_dependent": "slightly (Jaccard 0.990-0.994 raw vs canonical)",
+      "threads": 1,
+      "device": "cpu",
+      "padding": null,
+      "header_labels": "stored",
+      "environment": "fsl_6.0.7.17"
+    },
+    "deepbet": {
+      "display_name": "deepbet",
+      "versions": {
+        "python": "3.12.7",
+        "deepbet": "1.0.2 (PyPI)",
+        "torch": "2.5.0 (CUDA 12.1, cuDNN 9.1.0)",
+        "numpy": "2.1.1",
+        "nibabel": "5.3.1",
+        "model.pt_sha256": "de8ee7c69654d0dd3935dc4a5d84571d8ecf4637a6bfc01df399c4c2bc86e0fd",
+        "bbox_model.pt_sha256": "39a7b2b5f799faa1391ea97bfcdc0b9299f20d84f2316a4ff8918dc4685e40aa"
+      },
+      "call": "from deepbet import run_bet; run_bet([input_x10], [brain], [mask], [tiv], threshold=0.95, n_dilate=0, no_gpu=False, skip_broken=False)",
+      "parameters": {
+        "threshold": 0.95,
+        "n_dilate": 0
+      },
+      "input": "x10 canonical",
+      "header_dependent": false,
+      "orientation_dependent": false,
+      "device": "cuda (required: CPU masks differ by 8-16 voxels)",
+      "threads": 80,
+      "padding": null,
+      "header_labels": "anatomical",
+      "environment": "deepbet_1_env"
+    },
+    "ben": {
+      "display_name": "BEN",
+      "versions": {
+        "python": "3.7.16",
+        "tensorflow-gpu": "1.15.4 (runs on the CPU: CUDA 10.0 libraries absent)",
+        "Keras": "2.2.4",
+        "numpy": "1.16.0",
+        "SimpleITK": "2.0.0",
+        "opencv-python": "4.1.2.30",
+        "nibabel": "3.0.0",
+        "repository": "https://github.com/yu02019/BEN commit f23ed394f15c499e682bd44482bd89ff361d7c38 (2024-05-17), no tracked file modified",
+        "weight": "Mouse_T2WI_7T_2022_07191047/.hdf5 sha256 61c8780d2e73bc34539613725c3af81422bc123419af8605c7e06aec39280f6f"
+      },
+      "command": [
+        "{python}",
+        "BEN_infer.py",
+        "-i",
+        "{input_folder}",
+        "-o",
+        "{output_folder}",
+        "-weight",
+        "weight/Mouse_T2WI_7T_2022_07191047/"
+      ],
+      "output_mask": "{output_folder}/{input basename}",
+      "parameters": {
+        "weight": "Mouse-T2WI-7T",
+        "threshold": 0.5,
+        "check_orientation": null
+      },
+      "input": "x10 canonical",
+      "header_dependent": false,
+      "orientation_dependent": true,
+      "threads": 1,
+      "device": "cpu",
+      "padding": null,
+      "header_labels": "stored",
+      "environment": "ben",
+      "repository_folder": "<SAMSON_THIRD_PARTY>/BEN"
+    },
+    "rbm": {
+      "display_name": "RBM",
+      "versions": {
+        "repository": "https://github.com/CAMRIatUNC/RodentMRISkullStripping commit dfa1a123495628d5d8ffe576999f8f1ddfd1973a (2021-11-15); working-tree differences are line endings only",
+        "model": "rbm/scripts/rat_brain-2d_unet.hdf5 sha256 e60ef6e3accb55668dfd80b89adb31101a6708413db3c23088b4753dfa9da85a (md5 9877f1a44c9bce4d0f7c4331588b8dc6)",
+        "Keras/TensorFlow": "2.2.4 / 1.15.4 (CPU)",
+        "SimpleITK": "2.0.0"
+      },
+      "runner": {
+        "path": "notebooks/runners/rbm_unet_run_padded.py",
+        "usage": "python rbm_unet_run_padded.py jobs.json; jobs.json = {model_path, jobs: [{input, output, voxsize}]}"
+      },
+      "parameters": {
+        "voxsize": 1.0,
+        "voxsize_units": "header units (x10) = 0.1 mm real",
+        "patch": "1 x 128 x 128",
+        "stride": "1 x 32 x 32",
+        "threshold": 0.5,
+        "resampling": "in plane only (slice thickness kept), linear; label map back with nearest neighbour"
+      },
+      "input": "x10 canonical",
+      "header_dependent": true,
+      "orientation_dependent": true,
+      "threads": 1,
+      "device": "cpu",
+      "padding": "slices narrower than 128 voxels after resampling are zero-padded to 128 and cropped back (runner); inactive for D1-D7 (smallest resampled size 150 voxels)",
+      "header_labels": "stored",
+      "environment": "ben"
+    },
+    "ants": {
+      "display_name": "ANTs",
+      "script": {
+        "path": "antsBrainExtraction.sh",
+        "sha256": "237e4174aac2990aad6534a463ed2a63d1be51e3917a3108ec208a0e7ae270f7"
+      },
+      "command": [
+        "antsBrainExtraction.sh",
+        "-d",
+        "3",
+        "-a",
+        "{input_x10}",
+        "-e",
+        "{template_x10}",
+        "-m",
+        "{template_mask_x10}",
+        "-u",
+        "0",
+        "-o",
+        "{out_prefix}"
+      ],
+      "output_mask": "{out_prefix}BrainExtractionMask.nii.gz",
+      "template": {
+        "image": "datasets/template/anat_template_FP.nii.gz",
+        "mask": "datasets/template/anat_template_FP_mask.nii.gz (template > 0.5, 261,447 voxels)"
+      },
+      "parameters": {
+        "u": "0 (fixed seed)",
+        "threads": 1,
+        "script defaults": "N4 shrink 4/2, antsAI initial affine, SyN[0.1,3,0] with CC radius 4, 100x100x70x20, Atropos 3 classes"
+      },
+      "input": "x10 canonical",
+      "header_dependent": true,
+      "orientation_dependent": true,
+      "threads": 1,
+      "device": "cpu",
+      "padding": "images with fewer than 8 slices (D4: 6) are zero-padded along axis 2 with pad = ceil((8 - n) / 2) empty slices at each end, affine @ translate(0, 0, -pad) (sform = qform), output prefix '<prefix>padded_', mask cropped back [:, :, pad:-pad] (N4 shrink 4 fails otherwise)",
+      "header_labels": "stored",
+      "environment": "ANTs 2.5.0.post25-ge1239db (SAMSON_ANTS_BIN)"
+    }
+  }
+}

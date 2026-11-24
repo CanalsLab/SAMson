@@ -1,0 +1,11 @@
+# Data of the DIGITAL.CSIC deposit: download them there and place these two folders here (see README.md)
+/datasets/
+/outputs/
+# Written when the notebooks or run_all.py re-compute masks
+/notebooks/SAMson_outputs/
+/work/
+/third_party/
+/.FULL_RUN_ACTIVE
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

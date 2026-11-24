@@ -1,0 +1,12 @@
+{
+  "samson_spec_version": 1,
+  "name": "Article D1 (T2w, 16 slices of 0.8 mm; whole brain)",
+  "orientation": {
+    "axes": [0, 1, 2],
+    "flip": [false, false, false]
+  },
+  "slices": [0, -1],
+  "template": [4, 33],
+  "otsu": "auto",
+  "volume": 0
+}

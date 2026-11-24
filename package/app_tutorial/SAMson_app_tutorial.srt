@@ -1,0 +1,332 @@
+1
+00:00:01,150 --> 00:00:07,321
+SAMson extracts the brain from rodent MRI images with the Segment Anything Model, SAM.
+
+2
+00:00:07,291 --> 00:00:14,469
+This tutorial shows its app step by step, on a T2-weighted mouse image: the example of the SAMson notebook.
+
+3
+00:00:15,769 --> 00:00:22,845
+Once the package is installed, and SAM's model downloaded, the app starts from a terminal with the command samson app.
+
+4
+00:00:22,815 --> 00:00:28,248
+Here we give it the folder with our image, and open the address it prints in a web browser.
+
+5
+00:00:29,948 --> 00:00:31,914
+Step 1: Images.
+
+6
+00:00:32,714 --> 00:00:37,027
+The app opens on the first of its five steps, listed in the sidebar.
+
+7
+00:00:37,439 --> 00:00:39,933
+The folder we gave is already filled in.
+
+8
+00:00:39,903 --> 00:00:46,181
+The file name filter can select some of its files, for example only the T2-weighted images.
+
+9
+00:00:46,151 --> 00:00:52,650
+The table lists the images found, with their size, voxel size and the axis labels of their headers.
+
+10
+00:00:52,620 --> 00:00:57,863
+Our image has 200 by 200 voxels and 18 coronal slices.
+
+11
+00:00:57,833 --> 00:01:04,467
+The representative image is used to set up the whole dataset in the next steps. Here there is only one.
+
+12
+00:01:05,615 --> 00:01:12,995
+The app also notices that the header stores the voxel sizes ten times too large, as some rodent datasets do.
+
+13
+00:01:12,965 --> 00:01:19,572
+This does not change the masks; in step 3 we will set the scale, so that lengths are shown in millimetres.
+
+14
+00:01:19,542 --> 00:01:25,190
+Other ways to start are the example mouse included with SAMson, and uploading an image.
+
+15
+00:01:25,160 --> 00:01:29,303
+In the sidebar, the dataset specification records every choice.
+
+16
+00:01:29,273 --> 00:01:34,524
+It can be downloaded as a file, loaded again later, or used from the command line.
+
+17
+00:01:38,182 --> 00:01:40,369
+Step 2: Orientation.
+
+18
+00:01:41,469 --> 00:01:50,708
+SAMson works on coronal slices with the dorsal side up, ordered from the caudal end, the cerebellum, to the rostral end, the olfactory bulbs.
+
+19
+00:01:50,678 --> 00:01:56,729
+The figure shows our image as SAMson would read it, at the top, and SAMson's template, at the bottom.
+
+20
+00:01:56,699 --> 00:02:03,012
+Our image covers only the middle of the brain, with 18 thick slices, so its side view is narrow.
+
+21
+00:02:02,982 --> 00:02:08,273
+Below the options, the app shows the axis labels of the image header: R, S, P.
+
+22
+00:02:08,243 --> 00:02:14,121
+The P means that the slices run from the front of the head to the back: the reverse of SAMson's order.
+
+23
+00:02:14,091 --> 00:02:17,866
+The button “Guess from the image header” uses these labels.
+
+24
+00:02:18,090 --> 00:02:23,071
+It ticks “Reverse anteroposterior axis”, and the setting now matches the header.
+
+25
+00:02:23,041 --> 00:02:29,727
+The coronal slice stays upright, and in step 3 the coloured pairs will confirm the order of the slices.
+
+26
+00:02:29,697 --> 00:02:38,145
+The same settings can be chosen by hand: the image axes that run from back to front and from bottom to top, and whether to reverse them.
+
+27
+00:02:38,115 --> 00:02:41,366
+The caption gives the matching command-line options.
+
+28
+00:02:41,336 --> 00:02:48,404
+The image is only re-oriented in memory: the masks are always saved on the grid of the original image.
+
+29
+00:02:51,113 --> 00:02:53,920
+Step 3: Anteroposterior range.
+
+30
+00:02:55,020 --> 00:02:56,897
+This is SAMson's key setting.
+
+31
+00:02:56,867 --> 00:03:02,741
+For every slice, SAMson draws a box prompt: a rectangle that tells SAM where the brain is.
+
+32
+00:03:02,711 --> 00:03:11,672
+Its shape comes from the matching slice of the template, so SAMson needs to know which template slices match the first and the last slices of our image.
+
+33
+00:03:11,642 --> 00:03:15,297
+At the top are the side views of our image and of the template.
+
+34
+00:03:15,267 --> 00:03:20,218
+Each coloured line in our image is matched to the line of the same colour in the template.
+
+35
+00:03:20,188 --> 00:03:29,870
+The dashed line marks the anchor slice: there, SAMson finds the brain with an automatic threshold, median Otsu, and scales all the boxes from it.
+
+36
+00:03:29,840 --> 00:03:35,356
+First, we set the header scale to 0.1, so that lengths are shown in millimetres.
+
+37
+00:03:35,326 --> 00:03:38,221
+Now the app compares the lengths of both ranges.
+
+38
+00:03:38,191 --> 00:03:49,815
+Our 18 slices span 8.5 millimetres, while the default template range, 4 to 33, spans 11.6, so the app warns that their ratio is unusual.
+
+39
+00:03:49,785 --> 00:03:52,233
+The coloured pairs below show the problem.
+
+40
+00:03:52,203 --> 00:03:59,610
+Our first slice is matched to template slice 4, which is only cerebellum, and our last slice to the very front of the brain.
+
+41
+00:03:59,580 --> 00:04:03,300
+At both ends, the green boxes are too small for the brain.
+
+42
+00:04:03,270 --> 00:04:10,411
+So we move the template range to 8 to 31, which is also the range used for this image in the SAMson notebook.
+
+43
+00:04:10,381 --> 00:04:17,561
+The warning disappears: 8.5 millimetres against 9.2, a ratio of 0.92.
+
+44
+00:04:17,531 --> 00:04:23,281
+Now each pair shows the same anatomy, and the green boxes surround the brain at both ends.
+
+45
+00:04:24,121 --> 00:04:32,764
+Other options set the slices to process, link the lengths of the two ranges, move the side view, or change the median Otsu settings.
+
+46
+00:04:32,734 --> 00:04:37,563
+With manual masks of a few subjects, the app can also suggest the range.
+
+47
+00:04:40,257 --> 00:04:42,155
+Step 4: Segment.
+
+48
+00:04:43,256 --> 00:04:49,707
+SAMson uses SAM's largest model, ViT-H, as in the article, on the GPU if there is one.
+
+49
+00:04:49,677 --> 00:04:54,702
+The checkpoint, the file with the model's weights, was downloaded at installation.
+
+50
+00:04:54,672 --> 00:04:57,065
+Full-Auto gives one mask per slice.
+
+51
+00:04:57,035 --> 00:05:03,948
+Semi-Auto also keeps SAM's three candidate masks of every slice, so that we can choose the best one afterwards.
+
+52
+00:05:03,918 --> 00:05:05,644
+We choose Semi-Auto.
+
+53
+00:05:05,614 --> 00:05:11,640
+We can segment the representative image, all the images of the folder, or a selection of them.
+
+54
+00:05:11,610 --> 00:05:18,318
+Then we choose the output folder, and whether to save quality-control figures and brain-extracted images.
+
+55
+00:05:18,288 --> 00:05:24,782
+The app also writes the equivalent command, to process large datasets with exactly these settings.
+
+56
+00:05:24,752 --> 00:05:26,351
+Let's run SAMson.
+
+57
+00:05:26,643 --> 00:05:28,692
+SAM's model is loaded once.
+
+58
+00:05:28,662 --> 00:05:34,631
+Then, for each slice, SAMson draws the box prompt, and SAM segments the brain inside it.
+
+59
+00:05:38,501 --> 00:05:45,418
+Done: about ten seconds for the 18 slices on this GPU, and the masks are saved in the output folder.
+
+60
+00:05:48,104 --> 00:05:49,925
+Step 5: Review.
+
+61
+00:05:51,025 --> 00:05:56,037
+In Semi-Auto, each slice starts with its Full-Auto mask, marked with a tick.
+
+62
+00:05:56,007 --> 00:06:00,320
+Next to it are SAM's three candidates, numbered 0, 1 and 2.
+
+63
+00:06:00,290 --> 00:06:05,918
+“Zoom on the brain” shows only the region around it, and the slider moves through the slices.
+
+64
+00:06:07,286 --> 00:06:12,386
+The montage shows the mask of every slice in blue, inside its green box prompt.
+
+65
+00:06:12,356 --> 00:06:15,027
+The masks follow the outline of the brain.
+
+66
+00:06:14,997 --> 00:06:23,644
+There is no manual mask for this mouse, so we check the result against the Full-Auto mask that the SAMson notebook produced for this image.
+
+67
+00:06:23,614 --> 00:06:32,169
+The Jaccard index and the Dice coefficient are 1, which means perfect overlap: the two masks are identical, voxel by voxel.
+
+68
+00:06:32,139 --> 00:06:35,696
+The app reproduces the method of the article exactly.
+
+69
+00:06:35,666 --> 00:06:45,864
+With a manual mask as reference, this button picks the best candidate of every slice, as in the Semi-Auto evaluation of the article. Here we do not need it.
+
+70
+00:06:45,834 --> 00:06:50,607
+In the notebook, the Semi-Auto mask used candidate 1 in every slice.
+
+71
+00:06:50,577 --> 00:06:54,955
+We do the same: we set every slice to candidate 1, and apply.
+
+72
+00:06:55,757 --> 00:07:00,001
+Now we compare it with the Semi-Auto mask that the notebook produced.
+
+73
+00:06:59,971 --> 00:07:02,517
+Again, the two masks are identical.
+
+74
+00:07:02,487 --> 00:07:05,843
+Semi-Auto also lets us correct single slices.
+
+75
+00:07:05,813 --> 00:07:12,871
+On slice 1, candidate 1 has a notch on the right side, while the Full-Auto mask follows the edge of the brain.
+
+76
+00:07:12,841 --> 00:07:16,173
+So, for this slice, we choose the Full-Auto mask.
+
+77
+00:07:16,214 --> 00:07:17,713
+Finally, we save.
+
+78
+00:07:17,683 --> 00:07:26,666
+SAMson writes the mask, on the grid of the original image, with the candidates, a record of every setting and choice, and a quality-control figure.
+
+79
+00:07:26,636 --> 00:07:30,132
+Saved results can be reopened later from their folder.
+
+80
+00:07:32,486 --> 00:07:43,334
+In summary: SAMson segmented this mouse brain in about ten seconds, and the app gives exactly the masks of the SAMson notebook, in Full-Auto and in Semi-Auto.
+
+81
+00:07:46,334 --> 00:07:51,642
+Here is a closer look at six of the final slices, from the back of the brain to the front.
+
+82
+00:07:55,442 --> 00:08:02,008
+For a whole dataset, the specification saved by the app is used with the command samson segment.
+
+83
+00:08:05,308 --> 00:08:09,359
+The user guide explains every option. Thank you for watching.
+

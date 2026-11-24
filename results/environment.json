@@ -1,0 +1,158 @@
+{
+ "date": "2026-11-12T02:20:52",
+ "host": "lab-server",
+ "allocation": {
+  "hardware_threads": "16-95",
+  "n_hardware_threads": 80,
+  "physical_cores_touched": 48,
+  "gpu_index": 0,
+  "note": "Hardware threads 16-47 and 64-95 are both SMT threads of physical cores 16-47; threads 48-63 are the SMT siblings of physical cores 0-15 (threads 0-15), which stayed available to other users."
+ },
+ "cpu": {
+  "model": "AMD EPYC 9474F 48-Core Processor",
+  "sockets": "1",
+  "cores_per_socket": "48",
+  "threads_per_core": "2",
+  "logical_cpus": "96",
+  "max_mhz": "4114.4229",
+  "l3_cache": "256 MiB (8 instances)"
+ },
+ "ram_gb": 755.2,
+ "gpu": {
+  "nvidia_smi": "0, NVIDIA RTX A6000, 535.309.01, 49140 MiB",
+  "driver_cuda_version": "12.2"
+ },
+ "os": {
+  "name": "Ubuntu 24.04.3 LTS",
+  "kernel": "6.8.0-147-generic",
+  "shared_machine": true
+ },
+ "software": {
+  "samson_env": {
+   "python": "3.11.7",
+   "numpy": "1.26.3",
+   "scipy": "1.12.0",
+   "nibabel": "5.2.1",
+   "dipy": "1.9.0",
+   "skimage": "0.22.0",
+   "cv2": "4.10.0",
+   "pandas": "2.2.2",
+   "torch": "2.4.1+cu121",
+   "torchvision": "0.19.1+cu121",
+   "segment_anything": "1.0",
+   "torch.version.cuda": "12.1",
+   "cudnn": 90100
+  },
+  "samson_sam2_env": {
+   "python": "3.11.7",
+   "numpy": "1.26.3",
+   "nibabel": "5.2.1",
+   "torch": "2.5.1+cu121",
+   "sam2": "1.0",
+   "torch.version.cuda": "12.1",
+   "cudnn": 90100
+  },
+  "deepbet_env": {
+   "python": "3.12.7",
+   "deepbet": "1.0.2",
+   "torch": "2.5.0",
+   "nibabel": "5.3.1",
+   "numpy": "2.1.1",
+   "torch.version.cuda": "12.1",
+   "cudnn": 90100
+  },
+  "ben_env": {
+   "python": "3.7.16",
+   "tensorflow": "1.15.4",
+   "keras": "2.2.4",
+   "SimpleITK": "2.0.0",
+   "nibabel": "3.0.0",
+   "numpy": "1.16.0"
+  },
+  "fsl_bet": {
+   "fsl_6_0_7_4": {
+    "fsl_bet2": "2111.4",
+    "fsl_newimage": "2203.11"
+   },
+   "fsl_6_0_7_17": {
+    "fsl_bet2": "2111.8",
+    "fsl_newimage": "2203.12"
+   }
+  },
+  "ants": "ANTs Version: 2.5.0.post25-ge1239db; Compiled: Jan 11 2024 11:35:57"
+ },
+ "tool_parameters": {
+  "samson_full_auto": {
+   "input": "x10",
+   "checkpoint": "<SAMSON_CHECKPOINTS>/sam_vit_h_4b8939.pth",
+   "model": "vit_h",
+   "header_labels": "stored"
+  },
+  "samson_semi_auto": {
+   "input": "x10",
+   "checkpoint": "<SAMSON_CHECKPOINTS>/sam_vit_h_4b8939.pth",
+   "model": "vit_h",
+   "header_labels": "stored"
+  },
+  "samson_oracle": {
+   "input": "x10",
+   "checkpoint": "<SAMSON_CHECKPOINTS>/sam_vit_h_4b8939.pth",
+   "model": "vit_h",
+   "header_labels": "stored"
+  },
+  "medsam_samson_boxes": {
+   "input": "x10",
+   "checkpoint": "<SAMSON_CHECKPOINTS>/medsam_vit_b.pth",
+   "model": "vit_b",
+   "header_labels": "stored"
+  },
+  "sam2_samson_boxes": {
+   "input": "x10",
+   "checkpoint": "<SAMSON_CHECKPOINTS>/sam2.1_hiera_large.pt",
+   "config": "configs/sam2.1/sam2.1_hiera_l.yaml",
+   "header_labels": "stored"
+  },
+  "bet": {
+   "input": "x10",
+   "options": "-m -r 40 -f 0.2 -g 0.07",
+   "fsldir": "/opt/apps/conda/dpanadero/envs/fsl_6.0.7.4",
+   "header_labels": "stored"
+  },
+  "bet4animal": {
+   "input": "x10",
+   "options": "-m -x 1.6,1.2,2 -r 40 -f 0.4 -g 0",
+   "fsldir": "/opt/apps/conda/dpanadero/envs/fsl_6.0.7.17",
+   "header_labels": "stored"
+  },
+  "deepbet": {
+   "input": "x10",
+   "threshold": 0.95,
+   "n_dilate": 0,
+   "header_labels": "anatomical"
+  },
+  "ben": {
+   "input": "x10",
+   "weight": "weight/Mouse_T2WI_7T_2022_07191047/",
+   "check": null,
+   "header_labels": "stored",
+   "flip_axis1": true
+  },
+  "rbm": {
+   "input": "x10",
+   "voxsize": 1.0,
+   "model": "<SAMSON_THIRD_PARTY>/RodentMRISkullStripping/rbm/scripts/rat_brain-2d_unet.hdf5",
+   "header_labels": "stored",
+   "flip_axis1": true
+  },
+  "ants": {
+   "input": "x10",
+   "template": "datasets/template/anat_template_FP.nii.gz",
+   "template_mask": "datasets/template/anat_template_FP_mask.nii.gz",
+   "seed": 0,
+   "threads": 1,
+   "min_slices": 8,
+   "header_labels": "stored"
+  }
+ },
+ "inputs": "new"
+}

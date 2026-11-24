@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "samson-mri"
+dynamic = ["version"]
+description = "SAMson: automated brain extraction of rodent MRI with the Segment Anything Model (SAM)"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [
+  { name = "Daniel Panadero Soler" }, { name = "Mohamed Kotb Selim" }, { name = "Patricia Martínez-Tazo" },
+  { name = "Emma Muñoz-Moreno" }, { name = "Pedro Ramos-Cabrer" }, { name = "Pilar López-Larrubia" },
+  { name = "Silvia De Santis" }, { name = "Santiago Canals" }, { name = "Antonio Pertusa", email = "pertusa@ua.es" },
+]
+keywords = ["MRI", "brain extraction", "skull stripping", "rodent", "mouse", "rat", "segment anything", "SAM"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Image Processing",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+# Minimum versions; requirements-lock.txt lists the exact versions with which the package was tested and validated.
+dependencies = [
+  "numpy>=1.23",
+  "scipy>=1.9",
+  "pandas>=1.5",
+  "nibabel>=4.0",
+  "dipy>=1.7",
+  "scikit-image>=0.20",
+  "opencv-python-headless>=4.7",
+  "matplotlib>=3.6",
+  "torch>=2.0",
+  "torchvision>=0.15",
+  "segment-anything==1.0",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.32"]
+test = ["pytest>=7"]
+dev = ["samson-mri[app,test]", "build", "ruff"]
+
+[project.scripts]
+samson = "samson_mri.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/CanalsLab/SAMson"
+Paper = "https://doi.org/10.1101/2024.03.07.583982"
+Data = "https://doi.org/10.20350/digitalCSIC/17000"
+Changelog = "https://github.com/CanalsLab/SAMson/blob/main/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = { attr = "samson_mri._version.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+samson_mri = ["data/*.nii.gz", "data/*.md", "data/example/*.nii.gz", "app/*.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["model: needs SAM's ViT-H checkpoint (slow; skipped when it is not found)"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E712"]
